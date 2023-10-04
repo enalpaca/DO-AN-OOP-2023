@@ -41,7 +41,15 @@ namespace StoreManagement.IOFile
         }
         public static List<Product> ReadProduct()
         {
-            return Load<Product>("product.json");
+            List<Product> products = Load<Product>("product.json");
+            List<Category> categories = Load<Category>("category.json");
+
+            foreach (Product product in products)
+            {
+                product.Category = categories.Find(x => x.Id == product.CategoryId);
+            }
+
+            return products;
         }
 
         public static void SaveCategories(List<Category> categories)
@@ -66,6 +74,7 @@ namespace StoreManagement.IOFile
         {
             Save("goodsReceiptBill.json", goodsReceiptBills);
         }
+
         public static List<GoodsReceiptBill> ReadGoodsReceiptBill()
         {
             return Load<GoodsReceiptBill>("goodsReceiptBill.json");

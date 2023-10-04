@@ -1,7 +1,6 @@
 ﻿@model StoreManagement.Models.ProductViewModel
 @{
     ViewData["Title"] = "Danh sách mặt hàng";
-    Product[] ProductList = Model.ProductList.ToArray();
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -13,7 +12,7 @@
     </div>
 </form>
 
-<h2>Tổng cộng: @ProductList.Length</h2>
+<h2>Tổng cộng: @Model.ProductList.Count</h2>
 
 <div class="mb-3">
     <form style="display: inline" action="/Product/Create" method="get">
@@ -34,7 +33,7 @@
             <th>Số lượng tồn kho</th>
             <th>Hành động</th>
         </tr>
-        @foreach (var item in ProductList)
+        @foreach (var item in Model.ProductList)
         {
             <tr>
                 <td>@item.Id</td>

@@ -24,7 +24,11 @@ namespace StoreManagement.Controllers
         // GET: ProductController/Create
         public ActionResult Create()
         {
-            return View("Create");
+            List<Category> ListCategory = IOFile.IOFile.ReadCategory();
+            ProductViewModelCreateOrEdit productCreateViewModel = new ProductViewModelCreateOrEdit();
+            productCreateViewModel.ListCategory = ListCategory;
+
+            return View("Create", productCreateViewModel);
         }
 
         // POST: ProductController/Create

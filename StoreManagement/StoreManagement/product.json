@@ -1,1 +1,50 @@
-[{"Name":"abc","ExpiredAt":"2023-10-12T00:00:00","Company":"Btas","CategoryId":"giày","Quantity":4,"ProductionDate":"2023-10-13T00:00:00","Price":34,"Category":null,"Id":"LTIKFN","CreateAt":"0001-01-01T00:00:00"},{"Name":"abc","ExpiredAt":"2023-10-21T00:00:00","Company":"Btas","CategoryId":"g","Quantity":4,"ProductionDate":"2023-10-11T00:00:00","Price":4,"Category":null,"Id":"YZYHPB","CreateAt":"0001-01-01T00:00:00"},{"Name":"abc","ExpiredAt":"2023-10-03T00:00:00","Company":"Btas","CategoryId":"g","Quantity":3,"ProductionDate":"2023-10-19T00:00:00","Price":3,"Category":null,"Id":"KJGRSO","CreateAt":"0001-01-01T00:00:00"}]
+[
+  {
+    "Name": "abc",
+    "ExpiredAt": "2023-10-12T00:00:00",
+    "Company": "Btas",
+    "CategoryId": "SBJCWA",
+    "Quantity": 4,
+    "ProductionDate": "2023-10-13T00:00:00",
+    "Price": 34,
+    "Category": null,
+    "Id": "LTIKFN",
+    "CreateAt": "0001-01-01T00:00:00"
+  },
+  {
+    "Name": "abc",
+    "ExpiredAt": "2023-10-21T00:00:00",
+    "Company": "Btas",
+    "CategoryId": "SBJCWA",
+    "Quantity": 4,
+    "ProductionDate": "2023-10-11T00:00:00",
+    "Price": 4,
+    "Category": null,
+    "Id": "YZYHPB",
+    "CreateAt": "0001-01-01T00:00:00"
+  },
+  {
+    "Name": "abc",
+    "ExpiredAt": "2023-10-03T00:00:00",
+    "Company": "Btas",
+    "CategoryId": "SBJCWA",
+    "Quantity": 3,
+    "ProductionDate": "2023-10-19T00:00:00",
+    "Price": 3,
+    "Category": null,
+    "Id": "KJGRSO",
+    "CreateAt": "0001-01-01T00:00:00"
+  },
+  {
+    "Name": "Test 001",
+    "ExpiredAt": "0001-01-01T00:00:00",
+    "Company": "f",
+    "CategoryId": "SBJCWA",
+    "Quantity": 4,
+    "ProductionDate": "0001-01-01T00:00:00",
+    "Price": 4,
+    "Category": null,
+    "Id": "QKAXXN",
+    "CreateAt": "0001-01-01T00:00:00"
+  }
+]
