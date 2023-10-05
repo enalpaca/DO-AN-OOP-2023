@@ -1,17 +1,24 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using StoreManagement.IOFile;
 using StoreManagement.Models;
 
-// https://xuanthulab.net/asp-net-core-mvc-chi-tiet-ve-route-trong-asp-net-mvc.html
 namespace StoreManagement.Controllers
 {
     public class CategoryController : Controller
     {
         // GET: CategoryController
-        public ActionResult Index()
+        public ActionResult Index(string searchText)
         {
             List<Category> categories = IOFile.IOFile.ReadCategory();
             CategoryViewModel catViewModel = new CategoryViewModel();
+
+            if (searchText != null && searchText != "")
+            {
+                catViewModel.SearchText = searchText;
+                categories = categories.FindAll(p => Utils.StringLike(p.Id, searchText) || Utils.StringLike(p.Name, searchText));
+            }
+
             catViewModel.CategoryList = categories;
 
             return View("Index", catViewModel);

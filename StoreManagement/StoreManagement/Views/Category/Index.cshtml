@@ -5,9 +5,9 @@
 
 <h1>@ViewData["Title"]</h1>
 
-<form method="post" action="Category/SearchCategory">
+<form method="get" action="Category">
     <div class="input-group mb-3">
-        <input type="text" class="form-control" id="searchText" name="searchText" placeholder="Tìm mã loại hàng, loại hàng ..." aria-label="Tìm mã loại hàng, loại hàng ..." aria-describedby="button-addon2">
+        <input type="text" class="form-control" value="@Model.SearchText" name="searchText" placeholder="Tìm mã loại hàng, loại hàng ..." aria-label="Tìm mã loại hàng, loại hàng ..." aria-describedby="button-addon2">
         <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Tìm</button>
     </div>
 </form>
