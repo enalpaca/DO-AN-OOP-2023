@@ -8,6 +8,7 @@ namespace StoreManagement.Controllers
     public class CategoryController : Controller
     {
         // GET: CategoryController
+        [HttpGet("Category")]
         public ActionResult Index(string searchText)
         {
             List<Category> categories = IOFile.IOFile.ReadCategory();
@@ -37,7 +38,7 @@ namespace StoreManagement.Controllers
         }
 
         // POST: CategoryController/Create
-        [HttpPost]
+        [HttpPost("Category/Create")]
         [ValidateAntiForgeryToken]
         public ActionResult Create(Category newCat)
         {
@@ -56,7 +57,7 @@ namespace StoreManagement.Controllers
         }
 
         // GET: CategoryController/Edit/AFWE5
-        [HttpGet("Edit/{id}")]
+        [HttpGet("Category/Edit/{id}")]
         public ActionResult Edit(string id)
         {
             List<Category> ReadListCat = IOFile.IOFile.ReadCategory();
@@ -66,7 +67,7 @@ namespace StoreManagement.Controllers
         }
 
         // POST: CategoryController/Edit/5
-        [HttpPost("Edit/{id}")]
+        [HttpPost("Category/Edit/{id}")]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(string id, Category updatedCat)
         {
@@ -98,7 +99,7 @@ namespace StoreManagement.Controllers
         }
 
         // POST: CategoryController/Delete/5
-        [HttpPost("Delete/{id}")]
+        [HttpPost("Category/Delete/{id}")]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(string id)
         {
