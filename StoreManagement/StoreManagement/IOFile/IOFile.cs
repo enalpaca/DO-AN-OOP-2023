@@ -1,4 +1,5 @@
 ﻿using StoreManagement.Models;
+using System.Collections.Generic;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Unicode;
@@ -67,7 +68,22 @@ namespace StoreManagement.IOFile
         }
         public static List<Invoice> ReadInvoice()
         {
-            return Load<Invoice>("invoice.json");
+            List<Invoice> invoices = Load<Invoice>("invoice.json");
+            List<Product> products = ReadProduct();
+
+            foreach (Invoice invoice in invoices)
+            {
+                foreach (InvoiceProduct invoiceProductItem in invoice.ProductItems)
+                {
+                    Product? foundProduct = products.Find(x => x.Id == invoiceProductItem.Id);
+                    if (foundProduct != null)
+                    {
+                        invoiceProductItem.Name = foundProduct.Name;
+                        invoiceProductItem.Price = foundProduct.Price;
+                    }
+                }
+            }
+            return invoices;
         }
 
         public static void SaveGoodsReceiptBills(List<GoodsReceiptBill> goodsReceiptBills)

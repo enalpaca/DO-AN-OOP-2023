@@ -1,0 +1,40 @@
+﻿@model StoreManagement.Models.Invoice
+@{
+    ViewData["Title"] = "Tạo hóa đơn";
+}
+<h1>@ViewData["Title"]</h1>
+
+<hr />
+<div class="row">
+    <form asp-action="Create" class="row">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group col-md-6">
+            <label asp-for="CustomerName" class="control-label"></label>
+            <input asp-for="CustomerName" class="form-control" />
+            <span asp-validation-for="CustomerName" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="CustomerPhone" class="control-label"></label>
+            <input asp-for="CustomerPhone" class="form-control" />
+            <span asp-validation-for="CustomerPhone" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="CustomerAddress" class="control-label"></label>
+            <input asp-for="CustomerAddress" class="form-control" />
+            <span asp-validation-for="CustomerAddress" class="text-danger"></span>
+        </div>
+        <div class="form-group mt-3">
+            <input type="submit" value="Thêm" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
+
+<div class="mt-3">
+    <a asp-action="Index">Về danh sách hóa đơn</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
