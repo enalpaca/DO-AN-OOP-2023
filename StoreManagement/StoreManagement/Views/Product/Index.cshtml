@@ -5,9 +5,9 @@
 
 <h1>@ViewData["Title"]</h1>
 
-<form method="post" action="Product/SearchProduct">
+<form method="get" action="Product">
     <div class="input-group mb-3">
-        <input type="text" class="form-control" id="searchText" name="searchText" placeholder="Tìm mã hàng, mặt hàng ..." aria-label="Tìm mã hàng, mặt hàng ..." aria-describedby="button-addon2">
+        <input type="text" class="form-control" value="@Model.SearchText" name="searchText" placeholder="Tìm mã mặt hàng, mặt hàng ..." aria-label="Tìm mã mặt hàng, mặt hàng ..." aria-describedby="button-addon2">
         <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Tìm</button>
     </div>
 </form>
@@ -49,12 +49,18 @@
                 <td>
 
                     <div class="btn-group" role="group" aria-label="First group">
-                        <a href="/Product/EditProduct?Id=@item.Id"><button type="button" class="btn btn-warning">Sửa</button></a>
+                        @*                         <a href="/Product/Edit?Id=@item.Id"><button type="button" class="btn btn-warning">Sửa</button></a> *@
+                        <div class="btn-group" role="group">
+                            <a asp-controller="Product" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Sửa</a>
+                        </div>
                     </div>
 
                     <div class="btn-group" role="group" aria-label="Third group">
-                        <form method="post" action="Product/DeleteProduct?ProductCode=@item.Id">
-                            <input class="btn btn-danger" type="submit" value="Xóa">
+                        @*                         <form method="post" action="Product/DeleteProduct?@item.Id">
+                    <input class="btn btn-danger" type="submit" value="Xóa">
+                    </form> *@
+                        <form asp-action="Delete" asp-route-id="@item.Id">
+                            <input type="submit" value="Xóa" class="btn btn-danger">
                         </form>
                     </div>
                 </td>
