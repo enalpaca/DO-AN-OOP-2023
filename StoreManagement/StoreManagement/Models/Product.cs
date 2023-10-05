@@ -8,7 +8,7 @@ namespace StoreManagement.Models
         public override string Name { get; set; } = "";
 
         [Display(Name = "Ngày hết hạn:")]
-        public DateTime ExpiredAt { get; set; }
+        public DateTime ExpiredAt { get; set; } = DateTime.Now;
 
         [Display(Name = "Công ty sản xuất:")]
         public string Company { get; set; } = "";
@@ -20,7 +20,7 @@ namespace StoreManagement.Models
         public int Quantity { get; set; } = 0;
 
         [Display(Name = "Ngày sản xuất:")]
-        public DateTime ProductionDate { get; set; }
+        public DateTime ProductionDate { get; set; } = DateTime.Now;
 
         [Display(Name = "Giá:")]
         public long Price { get; set; } = 0;

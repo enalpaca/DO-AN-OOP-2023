@@ -1,0 +1,42 @@
+﻿@model StoreManagement.Models.ProductViewModel
+@{
+    ViewData["Title"] = Model.PageTitle;
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h2>Tổng cộng: @Model.ProductList.Count</h2>
+
+<div class="table-responsive">
+    <table class="table table-striped table-bordered">
+        <tr>
+            <th>Mã</th>
+            <th>Tên hàng</th>
+            <th>Hạn dùng</th>
+            <th>Công ty sản xuất</th>
+            <th>Ngày sản xuất</th>
+            <th>Loại hàng</th>
+            <th>Giá</th>
+            <th>Số lượng tồn kho</th>
+        </tr>
+        @foreach (var item in Model.ProductList)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+                <td>@item.ExpiredAt.ToString("yyyy-MM-dd")</td>
+                <td>@item.Company</td>
+                <td>@item.ProductionDate.ToString("yyyy-MM-dd")</td>
+                <td>
+                    @(item.Category != null ? @item.Category.Name : "")
+                </td>
+                <td>@item.Price.ToString("#,##0")</td>
+                <td>@item.Quantity</td>
+            </tr>
+        }
+    </table>
+</div>
+
+<div>
+    <a asp-action="Index">Quay về danh sách sản phẩm</a>
+</div>

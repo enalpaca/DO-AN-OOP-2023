@@ -15,9 +15,24 @@
 <h2>Tổng cộng: @Model.ProductList.Count</h2>
 
 <div class="mb-3">
-    <form style="display: inline" action="/Product/Create" method="get">
-        <button class="btn btn-primary">Thêm mới mặt hàng</button>
-    </form>
+    <div class="btn-group" role="group">
+        <form style="display: inline" action="/Product/Create" method="get">
+            <button class="btn btn-primary">Thêm mới mặt hàng</button>
+        </form>
+    </div>
+    <div class="btn-group" role="group">
+        <div class="dropdown">
+            <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                Thống kê hàng hóa
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li>
+                    <a asp-controller="Product" asp-action="Statistics" asp-route-Statisticstype="inventory" class="dropdown-item">Hàng tồn kho</a>
+                </li>
+                <li><a asp-controller="Product" asp-action="Statistics" asp-route-Statisticstype="expired" class="dropdown-item">Hàng hết hạn</a></li>
+            </ul>
+        </div>
+    </div>
 </div>
 
 <div class="table-responsive">
@@ -48,17 +63,11 @@
                 <td>@item.Quantity</td>
                 <td>
 
-                    <div class="btn-group" role="group" aria-label="First group">
-                        @*                         <a href="/Product/Edit?Id=@item.Id"><button type="button" class="btn btn-warning">Sửa</button></a> *@
-                        <div class="btn-group" role="group">
-                            <a asp-controller="Product" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Sửa</a>
-                        </div>
+                    <div class="btn-group" role="group">
+                        <a asp-controller="Product" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Sửa</a>
                     </div>
 
-                    <div class="btn-group" role="group" aria-label="Third group">
-                        @*                         <form method="post" action="Product/DeleteProduct?@item.Id">
-                    <input class="btn btn-danger" type="submit" value="Xóa">
-                    </form> *@
+                    <div class="btn-group">
                         <form asp-action="Delete" asp-route-id="@item.Id">
                             <input type="submit" value="Xóa" class="btn btn-danger">
                         </form>

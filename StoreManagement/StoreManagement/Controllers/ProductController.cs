@@ -7,6 +7,27 @@ namespace StoreManagement.Controllers
     public class ProductController : Controller
     {
         // GET: ProductController
+        public ActionResult Statistics(string StatisticsType)
+        {
+            List<Product> ProductList = IOFile.IOFile.ReadProduct();
+            ProductViewModel productViewModel = new ProductViewModel();
+
+            if (StatisticsType == "inventory")
+            {
+                productViewModel.ProductList = ProductList.FindAll(x => x.Quantity > 0);
+                productViewModel.PageTitle = "Danh sách sản phẩm tồn kho";
+            }
+
+            if (StatisticsType == "expired")
+            {
+                productViewModel.ProductList = ProductList.FindAll(x => x.ExpiredAt < DateTime.Now);
+                productViewModel.PageTitle = "Danh sách sản phẩm hết hạn sử dụng";
+            }
+
+            return View("Statistics", productViewModel);
+        }
+
+        // GET: ProductController
         public ActionResult Index(string searchText)
         {
             List<Product> ProductList = IOFile.IOFile.ReadProduct();
@@ -31,10 +52,10 @@ namespace StoreManagement.Controllers
         public ActionResult Create()
         {
             List<Category> ListCategory = IOFile.IOFile.ReadCategory();
-            ProductViewModelCreateOrEdit productCreateViewModel = new ProductViewModelCreateOrEdit();
-            productCreateViewModel.ListCategory = ListCategory;
 
-            return View("Create", productCreateViewModel);
+            ViewBag.Categories = ListCategory.ToArray();
+
+            return View("Create", new Product());
         }
 
         // POST: ProductController/Create
@@ -64,7 +85,7 @@ namespace StoreManagement.Controllers
             List<Category> ReadListCategory = IOFile.IOFile.ReadCategory();
 
             Product? product = ReadListProduct.Find(x => x.Id == id);
-          
+
             ViewBag.Categories = ReadListCategory.ToArray();
             return View("Edit", product);
         }

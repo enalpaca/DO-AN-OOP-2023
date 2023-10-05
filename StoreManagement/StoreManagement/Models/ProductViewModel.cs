@@ -4,10 +4,6 @@
     {
         public List<Product> ProductList { get; set; } = new List<Product>();
         public string SearchText { get; set; } = "";
-    }
-
-    public class ProductViewModelCreateOrEdit: Product
-    {
-        public List<Category> ListCategory { get; set; } = new List<Category>();
+        public string PageTitle { get; set; } = "";
     }
 }

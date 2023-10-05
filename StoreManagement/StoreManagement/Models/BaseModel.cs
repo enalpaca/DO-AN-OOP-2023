@@ -11,7 +11,7 @@ namespace StoreManagement.Models
 
         [Display(Name = "Tên:")]
         public virtual string Name { get; set; } = "";
-        public DateTime CreateAt { get; set; }
+        public DateTime CreateAt { get; set; } = DateTime.Now;
         public BaseModel()
         {
             Id = Utils.GenerateString();
