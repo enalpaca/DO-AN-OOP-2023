@@ -48,7 +48,7 @@ namespace StoreManagement.Controllers
 
                 ReadListInvoice.Add(newInvoice);
                 IOFile.IOFile.SaveInvoices(ReadListInvoice);
-                return RedirectToAction(nameof(Index));
+                return Redirect("Edit/" + newInvoice.Id);
             }
             catch
             {
@@ -70,13 +70,24 @@ namespace StoreManagement.Controllers
         }
 
         // POST: InvoiceController/Edit/5
-        [HttpPost]
+        [HttpPost("Invoice/Edit/{id}")]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(string id, Invoice invoiceUpdated)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                List<Invoice> ReadListInvoice = IOFile.IOFile.ReadInvoice();
+                foreach (Invoice item in ReadListInvoice)
+                {
+                    if (item.Id == invoiceUpdated.Id)
+                    {
+                        item.CustomerAddress = invoiceUpdated.CustomerAddress;
+                        item.CustomerName = invoiceUpdated.CustomerName;
+                        item.CustomerPhone = invoiceUpdated.CustomerPhone;
+                    }
+                }
+                IOFile.IOFile.SaveInvoices(ReadListInvoice);
+                return Redirect(id);
             }
             catch
             {
@@ -84,19 +95,22 @@ namespace StoreManagement.Controllers
             }
         }
 
-        // GET: InvoiceController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
         // POST: InvoiceController/Delete/5
-        [HttpPost]
+        [HttpPost("Invoice/Delete/{id}")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(string id)
         {
             try
             {
+                List<Invoice> ReadListInvoice = IOFile.IOFile.ReadInvoice();
+                int invoiceIndex = ReadListInvoice.FindIndex(x => x.Id == id);
+
+                if (invoiceIndex >= 0)
+                {
+                    ReadListInvoice.RemoveAt(invoiceIndex);
+                    IOFile.IOFile.SaveInvoices(ReadListInvoice);
+                }
+
                 return RedirectToAction(nameof(Index));
             }
             catch
