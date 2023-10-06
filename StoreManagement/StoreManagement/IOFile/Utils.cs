@@ -47,6 +47,8 @@ namespace StoreManagement.IOFile
                 }
             }
 
+            stringBuilder = stringBuilder.Replace('Đ', 'D');
+            stringBuilder = stringBuilder.Replace('đ', 'd');
             return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
         }
         public static bool StringLike(string str1, string str2)
