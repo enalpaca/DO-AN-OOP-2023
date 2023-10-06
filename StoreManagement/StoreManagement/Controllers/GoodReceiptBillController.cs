@@ -30,6 +30,9 @@ namespace StoreManagement.Controllers
         // GET: GoodReceiptBillController/Create
         public ActionResult Create()
         {
+            List<Product> ReadListProduct = IOFile.IOFile.ReadProduct();
+
+            ViewBag.ListProduct = ReadListProduct;
             return View("Create");
         }
 
@@ -41,8 +44,21 @@ namespace StoreManagement.Controllers
             try
             {
                 List<GoodsReceiptBill> ReadListGoodsReceiptBill = IOFile.IOFile.ReadGoodsReceiptBill();
+                List<Product> ReadListProduct = IOFile.IOFile.ReadProduct();
+
+                foreach (Product productItem in ReadListProduct)
+                {
+                    if (productItem.Id == newGoodsReceiptBill.ProductItem.Id)
+                    {
+                        productItem.Quantity += newGoodsReceiptBill.ProductItem.Quantity;
+                    }
+                }
+
                 ReadListGoodsReceiptBill.Add(newGoodsReceiptBill);
+
                 IOFile.IOFile.SaveGoodsReceiptBills(ReadListGoodsReceiptBill);
+                IOFile.IOFile.SaveProducts(ReadListProduct);
+
                 return Redirect("Index");
             }
             catch

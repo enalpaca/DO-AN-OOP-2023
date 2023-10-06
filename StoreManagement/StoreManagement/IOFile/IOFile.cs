@@ -93,7 +93,19 @@ namespace StoreManagement.IOFile
 
         public static List<GoodsReceiptBill> ReadGoodsReceiptBill()
         {
-            return Load<GoodsReceiptBill>("goodsReceiptBill.json");
+            List<Product> products = ReadProduct();
+            List<GoodsReceiptBill> goodsReceiptBill = Load<GoodsReceiptBill>("goodsReceiptBill.json");
+
+            foreach (GoodsReceiptBill bill in goodsReceiptBill)
+            {
+                Product? foundProduct = products.Find(x => x.Id == bill.ProductItem.Id);
+                if (foundProduct != null)
+                {
+                    bill.ProductItem.Name = foundProduct.Name;
+                }
+            }
+
+            return goodsReceiptBill;
         }
     }
 }
