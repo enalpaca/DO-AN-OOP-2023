@@ -47,7 +47,7 @@ namespace StoreManagement.Controllers
             if (searchText != null && searchText != "")
             {
                 productViewModel.SearchText = searchText;
-                ProductList = ProductList.FindAll(p => Utils.StringLike(p.Id, searchText) || Utils.StringLike(p.Name, searchText));
+                ProductList = ProductList.FindAll(p => Utils.StringLike(p.Id, searchText) || Utils.StringLike(p.Name, searchText) || Utils.StringLike(p.Company, searchText));
             }
 
             int currentPage = page ?? 1;
