@@ -9,6 +9,18 @@ namespace StoreManagement.Controllers
 
         // 1-success, 2-warning, 3-danger, 4-info
         // https://mianliencoding.com/chi-tiet-bai-viet-tao-alert-trong-asp-net-mvc-su-dung-bootstrap-28
+
+        protected void SetAlertInfo(string message)
+        {
+            TempData["AlertMessage"] = message;
+            TempData["AlertType"] = "alert-info";
+        }
+
+        protected void SetAlertError(string message)
+        {
+            TempData["AlertMessage"] = message;
+            TempData["AlertType"] = "alert-danger";
+        }
         protected void SetAlert(string message, int type)
         {
             TempData["AlertMessage"] = message;

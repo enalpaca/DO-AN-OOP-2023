@@ -66,7 +66,7 @@ namespace StoreManagement.Controllers
                 ReadListCat.Add(newCat);
                 IOFile.IOFile.SaveCategories(ReadListCat);
 
-                SetAlert(ErrorMessage.CREATED_SUCCESS, 1);
+                SetAlertInfo(ErrorMessage.CREATED_SUCCESS);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -103,7 +103,7 @@ namespace StoreManagement.Controllers
                     IOFile.IOFile.SaveCategories(ReadListCategory);
                 }
 
-                SetAlert(ErrorMessage.UPDATED_SUCCESS, 1);
+                SetAlertInfo(ErrorMessage.UPDATED_SUCCESS);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -135,7 +135,7 @@ namespace StoreManagement.Controllers
                     IOFile.IOFile.SaveCategories(ReadListCategory);
                 }
 
-                SetAlert(ErrorMessage.DELETED_SUCCESS, 1);
+                SetAlertInfo(ErrorMessage.DELETED_SUCCESS);
                 return RedirectToAction(nameof(Index));
             }
 

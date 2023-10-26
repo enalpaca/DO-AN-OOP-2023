@@ -62,6 +62,7 @@ namespace StoreManagement.Controllers
 
                 ReadListInvoice.Add(newInvoice);
                 IOFile.IOFile.SaveInvoices(ReadListInvoice);
+                SetAlertInfo(ErrorMessage.CREATED_SUCCESS);
                 return Redirect("Edit/" + newInvoice.Id);
             }
             catch
@@ -121,8 +122,17 @@ namespace StoreManagement.Controllers
 
                 if (invoiceIndex >= 0)
                 {
-                    ReadListInvoice.RemoveAt(invoiceIndex);
-                    IOFile.IOFile.SaveInvoices(ReadListInvoice);
+                    if (ReadListInvoice[invoiceIndex].ProductItems.Count == 0)
+                    {
+                        ReadListInvoice.RemoveAt(invoiceIndex);
+                        IOFile.IOFile.SaveInvoices(ReadListInvoice);
+
+                        SetAlertInfo(ErrorMessage.DELETED_SUCCESS);
+                    }
+                    else
+                    {
+                        SetAlertError(ErrorMessage.INVOICE_HAS_PRODUCT);
+                    }
                 }
 
                 return RedirectToAction(nameof(Index));
@@ -138,33 +148,45 @@ namespace StoreManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult AddInvoiceProductItem(string invoiceID, InvoiceProduct newInvoiceProductItem)
         {
-            try
+            List<Invoice> ReadListInvoice = IOFile.IOFile.ReadInvoice();
+            List<Product> ReadListProduct = IOFile.IOFile.ReadProduct();
+
+            int currentProductIndex = ReadListProduct.FindIndex(p => p.Id == newInvoiceProductItem.Id);
+            if (currentProductIndex < 0)
             {
-                List<Invoice> ReadListInvoice = IOFile.IOFile.ReadInvoice();
-
-                int invoiceIndex = ReadListInvoice.FindIndex(x => x.Id == invoiceID);
-
-                if (invoiceIndex >= 0)
-                {
-                    int productItemsIndex = ReadListInvoice[invoiceIndex].ProductItems.FindIndex(y => y.Id == newInvoiceProductItem.Id);
-                    if (productItemsIndex >= 0)
-                    {
-                        ReadListInvoice[invoiceIndex].ProductItems[productItemsIndex].Quantity += newInvoiceProductItem.Quantity;
-                    }
-                    else
-                    {
-                        ReadListInvoice[invoiceIndex].ProductItems.Add(newInvoiceProductItem);
-                    }
-                    IOFile.IOFile.SaveInvoices(ReadListInvoice);
-
-                }
-
+                SetAlertError(ErrorMessage.PRODUCT_NOT_FOUND);
                 return Redirect("/Invoice/Edit/" + invoiceID);
             }
-            catch
+
+            if (ReadListProduct[currentProductIndex].Quantity < newInvoiceProductItem.Quantity)
             {
-                return View();
+                SetAlertError(ErrorMessage.EXCEED_QUANTITY);
+                return Redirect("/Invoice/Edit/" + invoiceID);
             }
+
+            int invoiceIndex = ReadListInvoice.FindIndex(x => x.Id == invoiceID);
+
+            if (invoiceIndex < 0)
+            {
+                SetAlertError(ErrorMessage.INVOICE_NOT_FOUND);
+                return Redirect("/Invoice/Edit/" + invoiceID);
+            }
+
+            InvoiceProduct? invoiceProduct = ReadListInvoice[invoiceIndex].ProductItems.Find(p => p.Id == newInvoiceProductItem.Id);
+            if (invoiceProduct != null)
+            {
+                SetAlertError(ErrorMessage.INVOICE_PRODUCT_FOUND);
+                return Redirect("/Invoice/Edit/" + invoiceID);
+            }
+
+            ReadListInvoice[invoiceIndex].ProductItems.Add(newInvoiceProductItem);
+            ReadListProduct[currentProductIndex].Quantity -= newInvoiceProductItem.Quantity;
+
+            IOFile.IOFile.SaveInvoices(ReadListInvoice);
+            IOFile.IOFile.SaveProducts(ReadListProduct);
+
+            SetAlertInfo(ErrorMessage.CREATED_SUCCESS);
+            return Redirect("/Invoice/Edit/" + invoiceID);
         }
 
         // POST: InvoiceController/Delete/5/ProductItem
@@ -172,28 +194,34 @@ namespace StoreManagement.Controllers
         [ActionName("DeleteInvoiceProductItem")]
         public ActionResult DeleteInvoiceProductItem(string InvoiceCode, string ProductCode)
         {
-            try
+            List<Invoice> ReadListInvoice = IOFile.IOFile.ReadInvoice();
+            List<Product> ReadListProduct = IOFile.IOFile.ReadProduct();
+
+            int invoiceIndex = ReadListInvoice.FindIndex(x => x.Id == InvoiceCode);
+
+            if (invoiceIndex >= 0)
             {
-                List<Invoice> ReadListInvoice = IOFile.IOFile.ReadInvoice();
+                int invoiceProducItemIndex = ReadListInvoice[invoiceIndex].ProductItems.FindIndex(x => x.Id == ProductCode);
 
-                int invoiceIndex = ReadListInvoice.FindIndex(x => x.Id == InvoiceCode);
-
-                if (invoiceIndex >= 0)
+                if (invoiceProducItemIndex >= 0)
                 {
-                    int invoiceProducItemIndex = ReadListInvoice[invoiceIndex].ProductItems.FindIndex(x => x.Id == ProductCode);
-                    if (invoiceProducItemIndex >= 0)
-                    {
-                        ReadListInvoice[invoiceIndex].ProductItems.RemoveAt(invoiceProducItemIndex);
-                        IOFile.IOFile.SaveInvoices(ReadListInvoice);
-                    }
-                }
+                    int productIndex = ReadListProduct.FindIndex(p => p.Id == ReadListInvoice[invoiceIndex].ProductItems[invoiceProducItemIndex].Id);
 
-                return Redirect("/Invoice/Edit/" + InvoiceCode);
+                    if (productIndex >= 0)
+                    {
+                        ReadListProduct[productIndex].Quantity += ReadListInvoice[invoiceIndex].ProductItems[invoiceProducItemIndex].Quantity;
+                    }
+
+                    ReadListInvoice[invoiceIndex].ProductItems.RemoveAt(invoiceProducItemIndex);
+
+                    IOFile.IOFile.SaveProducts(ReadListProduct);
+                    IOFile.IOFile.SaveInvoices(ReadListInvoice);
+                    SetAlertInfo(ErrorMessage.DELETED_SUCCESS);
+                }
             }
-            catch
-            {
-                return View();
-            }
+
+            return Redirect("/Invoice/Edit/" + InvoiceCode);
+
         }
 
         // POST: InvoiceController/Update/5/ProductItem
@@ -201,28 +229,67 @@ namespace StoreManagement.Controllers
         [ActionName("UpdateInvoiceProductItem")]
         public ActionResult UpdateInvoiceProductItem(string InvoiceCode, string ProductCode, InvoiceProduct updatedInvoiceProduct)
         {
-            try
+            List<Invoice> ReadListInvoice = IOFile.IOFile.ReadInvoice();
+            List<Product> ReadListProduct = IOFile.IOFile.ReadProduct();
+
+            int currentProductIndex = ReadListProduct.FindIndex(p => p.Id == ProductCode);
+            int invoiceIndex = ReadListInvoice.FindIndex(x => x.Id == InvoiceCode);
+
+            if (currentProductIndex < 0)
             {
-                List<Invoice> ReadListInvoice = IOFile.IOFile.ReadInvoice();
-
-                int invoiceIndex = ReadListInvoice.FindIndex(x => x.Id == InvoiceCode);
-
-                if (invoiceIndex >= 0)
-                {
-                    int invoiceProducItemIndex = ReadListInvoice[invoiceIndex].ProductItems.FindIndex(x => x.Id == ProductCode);
-                    if (invoiceProducItemIndex >= 0)
-                    {
-                        ReadListInvoice[invoiceIndex].ProductItems[invoiceProducItemIndex].Quantity = updatedInvoiceProduct.Quantity;
-                        IOFile.IOFile.SaveInvoices(ReadListInvoice);
-                    }
-                }
-
+                SetAlertError(ErrorMessage.PRODUCT_NOT_FOUND);
                 return Redirect("/Invoice/Edit/" + InvoiceCode);
             }
-            catch
+            if (invoiceIndex < 0)
             {
-                return View();
+                SetAlertError(ErrorMessage.INVOICE_NOT_FOUND);
+                return Redirect("/Invoice/Edit/" + InvoiceCode);
             }
+
+
+            int invoiceProducItemIndex = ReadListInvoice[invoiceIndex].ProductItems.FindIndex(x => x.Id == ProductCode);
+
+            if (invoiceProducItemIndex < 0)
+            {
+                SetAlertError(ErrorMessage.INVOICE_PRODUCT_NOT_FOUND);
+                return Redirect("/Invoice/Edit/" + InvoiceCode);
+            }
+
+            int delta = updatedInvoiceProduct.Quantity - ReadListInvoice[invoiceIndex].ProductItems[invoiceProducItemIndex].Quantity;
+
+            ReadListInvoice[invoiceIndex].ProductItems[invoiceProducItemIndex].Quantity = updatedInvoiceProduct.Quantity;
+
+            // user tăng sl trong hóa đơn
+            if (delta > 0)
+            {
+                if (delta > ReadListProduct[currentProductIndex].Quantity)
+                {
+                    SetAlertError(ErrorMessage.EXCEED_QUANTITY);
+                    return Redirect("/Invoice/Edit/" + InvoiceCode);
+                }
+
+                // giảm sl tồn kho
+                ReadListProduct[currentProductIndex].Quantity -= delta;
+            }
+
+            // user giảm sl trong hóa đơn
+            if (delta < 0)
+            {
+                // tăng sl tồn kho
+                ReadListProduct[currentProductIndex].Quantity += Math.Abs(delta);
+            }
+
+            // user đã giảm sl tới 0, ta sẽ xóa sp khỏi hóa đơn
+            if (ReadListInvoice[invoiceIndex].ProductItems[invoiceProducItemIndex].Quantity == 0)
+            {
+                ReadListInvoice[invoiceIndex].ProductItems.RemoveAt(invoiceProducItemIndex);
+            }
+
+            IOFile.IOFile.SaveProducts(ReadListProduct);
+            IOFile.IOFile.SaveInvoices(ReadListInvoice);
+
+            SetAlertInfo(ErrorMessage.UPDATED_SUCCESS);
+            return Redirect("/Invoice/Edit/" + InvoiceCode);
         }
     }
 }

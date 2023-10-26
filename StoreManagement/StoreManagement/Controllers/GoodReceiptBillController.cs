@@ -69,7 +69,7 @@ namespace StoreManagement.Controllers
             IOFile.IOFile.SaveGoodsReceiptBills(ReadListGoodsReceiptBill);
             IOFile.IOFile.SaveProducts(ReadListProduct);
 
-            SetAlert(ErrorMessage.CREATED_SUCCESS, 1);
+            SetAlertInfo(ErrorMessage.CREATED_SUCCESS);
             return Redirect("Index");
 
         }
@@ -106,7 +106,7 @@ namespace StoreManagement.Controllers
                 }
                 IOFile.IOFile.SaveGoodsReceiptBills(ReadListGoodsReceiptBill);
 
-                SetAlert(ErrorMessage.UPDATED_SUCCESS, 1);
+                SetAlertInfo(ErrorMessage.UPDATED_SUCCESS);
                 return Redirect(id);
             }
             catch

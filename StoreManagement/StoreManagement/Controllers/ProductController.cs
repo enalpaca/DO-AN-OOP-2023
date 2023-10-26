@@ -157,7 +157,7 @@ namespace StoreManagement.Controllers
 
             if (productIndex < 0)
             {
-                SetAlert(ErrorMessage.PRODUCT_NOT_FOUND, 3);
+                SetAlertError(ErrorMessage.PRODUCT_NOT_FOUND);
                 return Redirect("/Product");
             }
 
@@ -177,14 +177,14 @@ namespace StoreManagement.Controllers
 
             if (flag == true)
             {
-                SetAlert(ErrorMessage.PRODUCT_EXISTING_IN_INVOICE, 3);
+                SetAlertError(ErrorMessage.PRODUCT_EXISTING_IN_INVOICE);
             }
             else
             {
                 ReadListProduct.RemoveAt(productIndex);
                 IOFile.IOFile.SaveProducts(ReadListProduct);
 
-                SetAlert(ErrorMessage.DELETED_SUCCESS, 3);
+                SetAlertError(ErrorMessage.DELETED_SUCCESS);
             }
 
             return RedirectToAction(nameof(Index));
