@@ -4,13 +4,15 @@ using StoreManagement.Models;
 
 namespace StoreManagement.Controllers
 {
-    public class CategoryController : Controller
+    public class CategoryController : BaseController
     {
         // GET: CategoryController
         [HttpGet("Category")]
-        public ActionResult Index(string searchText)
+        public ActionResult Index(string searchText, string confirmOnDelete, string deletedCategoryCode, int? page)
         {
             List<Category> categories = IOFile.IOFile.ReadCategory();
+            List<Product> ReadListProduct = IOFile.IOFile.ReadProduct();
+
             CategoryViewModel catViewModel = new CategoryViewModel();
 
             if (searchText != null && searchText != "")
@@ -19,7 +21,23 @@ namespace StoreManagement.Controllers
                 categories = categories.FindAll(p => Utils.StringLike(p.Id, searchText) || Utils.StringLike(p.Name, searchText));
             }
 
-            catViewModel.CategoryList = categories;
+            if (confirmOnDelete == "true")
+            {
+                ViewBag.ProductListOnDeletedCategory = ReadListProduct.FindAll(p => p.CategoryId == deletedCategoryCode).ToArray();
+            }
+
+            int currentPage = page ?? 1;
+            int totalRows = categories.Count;
+
+            categories = categories.Skip((currentPage - 1) * PAGE_SIZE)
+             .Take(PAGE_SIZE).ToList();
+
+            ViewBag.totalPage = IOFile.Utils.CalculateNumberOfPage(totalRows, PAGE_SIZE); ;
+            ViewBag.currentPage = currentPage;
+            ViewBag.totalRow = totalRows;
+
+            catViewModel.CategoryRows = categories;
+            catViewModel.TotalRows = totalRows;
 
             return View("Index", catViewModel);
         }

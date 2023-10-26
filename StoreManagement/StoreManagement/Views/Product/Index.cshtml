@@ -12,7 +12,7 @@
     </div>
 </form>
 
-<h2>Tổng cộng: @Model.ProductList.Count</h2>
+<h2>Tổng cộng: @Model.TotalRows</h2>
 
 <div class="mb-3">
     <div class="btn-group" role="group">
@@ -40,6 +40,7 @@
         <tr class="text-center">
             <th>Mã</th>
             <th>Tên hàng</th>
+            <th>Đơn vị tính</th>
             <th>Hạn dùng</th>
             <th>Công ty sản xuất</th>
             <th>Ngày sản xuất</th>
@@ -53,6 +54,7 @@
             <tr>
                 <th>@item.Id</th>
                 <td>@item.Name</td>
+                <td>@item.Unit</td>
                 <td>@item.ExpiredAt.ToString("yyyy-MM-dd")</td>
                 <td>@item.Company</td>
                 <td>@item.ProductionDate.ToString("yyyy-MM-dd")</td>
@@ -74,4 +76,5 @@
             </tr>
         }
     </table>
+    <partial name="../Shared/Panigation.cshtml" />
 </div>

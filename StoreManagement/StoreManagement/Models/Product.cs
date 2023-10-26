@@ -7,6 +7,9 @@ namespace StoreManagement.Models
         [Display(Name = "Tên sản phẩm:")]
         public override string Name { get; set; } = "";
 
+        [Display(Name = "Đơn vị tính:")]
+        public string Unit { get; set; } = "";
+
         [Display(Name = "Ngày hết hạn:")]
         public DateTime ExpiredAt { get; set; } = DateTime.Now;
 

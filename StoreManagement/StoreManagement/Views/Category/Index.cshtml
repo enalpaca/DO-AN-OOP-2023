@@ -12,7 +12,7 @@
     </div>
 </form>
 
-<h2>Tổng cộng: @Model.CategoryList.Count</h2>
+<h2>Tổng cộng: @Model.TotalRows</h2>
 
 <div class="mb-3">
     <a asp-action="Create" class="btn btn-primary">Thêm mới loại hàng</a>
@@ -25,7 +25,7 @@
             <th>Tên loại hàng</th>
             <th>Hành động</th>
         </tr>
-        @foreach (var item in @Model.CategoryList)
+        @foreach (var item in @Model.CategoryRows)
         {
             <tr>
                 <th>@item.Id</th>
@@ -45,4 +45,5 @@
             </tr>
         }
     </table>
+    <partial name="../Shared/Panigation.cshtml" />
 </div>

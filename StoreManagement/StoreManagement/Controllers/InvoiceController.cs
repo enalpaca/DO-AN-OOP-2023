@@ -1,13 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using StoreManagement.IOFile;
 using StoreManagement.Models;
+using System.Drawing.Printing;
 
 namespace StoreManagement.Controllers
 {
-    public class InvoiceController : Controller
+    public class InvoiceController : BaseController
     {
         // GET: InvoiceController
-        public ActionResult Index(string searchText)
+        public ActionResult Index(string searchText, int? page)
         {
             List<Invoice> invoices = IOFile.IOFile.ReadInvoice();
             InvoiceViewModel invoiceViewModel = new InvoiceViewModel();
@@ -16,7 +18,19 @@ namespace StoreManagement.Controllers
                 invoiceViewModel.SearchText = searchText;
                 invoices = invoices.FindAll(p => Utils.StringLike(p.Id, searchText) || Utils.StringLike(p.CustomerName, searchText) || Utils.StringLike(p.CustomerPhone, searchText));
             }
+
+            int currentPage = page ?? 1;
+            int totalRows = invoices.Count;
+
+            invoices = invoices.Skip((currentPage - 1) * PAGE_SIZE)
+            .Take(PAGE_SIZE).ToList();
+
+            ViewBag.totalPage = IOFile.Utils.CalculateNumberOfPage(totalRows, PAGE_SIZE); ;
+            ViewBag.currentPage = currentPage;
+            ViewBag.totalRow = totalRows;
+
             invoiceViewModel.InvoiceList = invoices;
+            invoiceViewModel.TotalRows = totalRows;
 
             return View("Index", invoiceViewModel);
         }

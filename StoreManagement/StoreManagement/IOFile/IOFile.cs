@@ -8,6 +8,38 @@ namespace StoreManagement.IOFile
 {
     public class IOFile
     {
+        private static string? baseFolder = Environment.GetEnvironmentVariable("ASPNETCORE_FOLDER");
+        private static string productFilePath = "product.json";
+        private static string categoryFilePath = "category.json";
+        private static string invoiceFilePath = "invoice.json";
+        private static string goodsReceiptBillFilePath = "goodsReceiptBill.json";
+
+        public static void checkFilePaths()
+        {
+            if (baseFolder == null)
+            {
+                return;
+            }
+
+            baseFolder = baseFolder.Trim();
+
+            if (baseFolder == "")
+            {
+                return;
+
+            }
+
+            productFilePath = baseFolder + '/' + "product.json";
+            categoryFilePath = baseFolder + '/' + "category.json";
+            invoiceFilePath = baseFolder + '/' + "invoice.json";
+            goodsReceiptBillFilePath = baseFolder + '/' + "goodsReceiptBill.json";
+
+            if (!Directory.Exists(baseFolder))
+            {
+                Directory.CreateDirectory(baseFolder);
+            }
+        }
+
         // https://stackoverflow.com/questions/58003293/dotnet-core-system-text-json-unescape-unicode-string
         public static JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions
         {
@@ -22,7 +54,6 @@ namespace StoreManagement.IOFile
 
         public static List<T> Load<T>(string fileName)
         {
-
             if (File.Exists(fileName))
             {
                 string json = File.ReadAllText(fileName);
@@ -38,12 +69,14 @@ namespace StoreManagement.IOFile
 
         public static void SaveProducts(List<Product> products)
         {
-            Save("product.json", products);
+            checkFilePaths();
+            Save(productFilePath, products);
         }
         public static List<Product> ReadProduct()
         {
-            List<Product> products = Load<Product>("product.json");
-            List<Category> categories = Load<Category>("category.json");
+            checkFilePaths();
+            List<Product> products = Load<Product>(productFilePath);
+            List<Category> categories = Load<Category>(categoryFilePath);
 
             foreach (Product product in products)
             {
@@ -55,20 +88,24 @@ namespace StoreManagement.IOFile
 
         public static void SaveCategories(List<Category> categories)
         {
-            Save("category.json", categories);
+            checkFilePaths();
+            Save(categoryFilePath, categories);
         }
         public static List<Category> ReadCategory()
         {
-            return Load<Category>("category.json");
+            checkFilePaths();
+            return Load<Category>(categoryFilePath);
         }
 
         public static void SaveInvoices(List<Invoice> invoices)
         {
-            Save("invoice.json", invoices);
+            checkFilePaths();
+            Save(invoiceFilePath, invoices);
         }
         public static List<Invoice> ReadInvoice()
         {
-            List<Invoice> invoices = Load<Invoice>("invoice.json");
+            checkFilePaths();
+            List<Invoice> invoices = Load<Invoice>(invoiceFilePath);
             List<Product> products = ReadProduct();
 
             foreach (Invoice invoice in invoices)
@@ -88,13 +125,15 @@ namespace StoreManagement.IOFile
 
         public static void SaveGoodsReceiptBills(List<GoodsReceiptBill> goodsReceiptBills)
         {
-            Save("goodsReceiptBill.json", goodsReceiptBills);
+            checkFilePaths();
+            Save(goodsReceiptBillFilePath, goodsReceiptBills);
         }
 
         public static List<GoodsReceiptBill> ReadGoodsReceiptBill()
         {
+            checkFilePaths();
             List<Product> products = ReadProduct();
-            List<GoodsReceiptBill> goodsReceiptBill = Load<GoodsReceiptBill>("goodsReceiptBill.json");
+            List<GoodsReceiptBill> goodsReceiptBill = Load<GoodsReceiptBill>(goodsReceiptBillFilePath);
 
             foreach (GoodsReceiptBill bill in goodsReceiptBill)
             {

@@ -2,7 +2,8 @@
 {
     public class CategoryViewModel
     {
-        public List<Category> CategoryList { get; set; } = new List<Category>();
+        public List<Category> CategoryRows { get; set; } = new List<Category>();
         public string SearchText { get; set; } = "";
+        public int TotalRows { get; set; } = 0;
     }
 }

@@ -7,14 +7,11 @@ namespace StoreManagement.Models
         [Display(Name = "Tên hàng hóa:")]
         public override string Name { get; set; } = "";
 
-        [Display(Name = "Đơn vị tính:")]
-        public string Unit { get; set; } = "";
-
         [Display(Name = "Giá:")]
         public long Price { get; set; } = 0;
 
-        [Display(Name = "Công ty:")]
-        public string Company { get; set; } = "";
+        [Display(Name = "Nhà cung cấp:")]
+        public string Provider { get; set; } = "";
 
         [Display(Name = "Số lượng:")]
         public int Quantity { get; set; } = 0;

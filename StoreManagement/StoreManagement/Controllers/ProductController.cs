@@ -1,13 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using StoreManagement.IOFile;
 using StoreManagement.Models;
+using System.Drawing.Printing;
 
 namespace StoreManagement.Controllers
 {
-    public class ProductController : Controller
+    public class ProductController : BaseController
     {
         // GET: ProductController
-        public ActionResult Statistics(string StatisticsType)
+        public ActionResult Statistics(string StatisticsType, int? page)
         {
             List<Product> ProductList = IOFile.IOFile.ReadProduct();
             ProductViewModel productViewModel = new ProductViewModel();
@@ -24,11 +26,21 @@ namespace StoreManagement.Controllers
                 productViewModel.PageTitle = "Danh sách sản phẩm hết hạn sử dụng";
             }
 
+            int currentPage = page ?? 1;
+            int totalRows = productViewModel.ProductList.Count;
+
+            productViewModel.ProductList = productViewModel.ProductList.Skip((currentPage - 1) * PAGE_SIZE)
+            .Take(PAGE_SIZE).ToList();
+
+            ViewBag.totalPage = IOFile.Utils.CalculateNumberOfPage(totalRows, PAGE_SIZE); ;
+            ViewBag.currentPage = currentPage;
+            ViewBag.totalRow = totalRows;
+
             return View("Statistics", productViewModel);
         }
 
         // GET: ProductController
-        public ActionResult Index(string searchText)
+        public ActionResult Index(string searchText, int? page)
         {
             List<Product> ProductList = IOFile.IOFile.ReadProduct();
             ProductViewModel productViewModel = new ProductViewModel();
@@ -37,7 +49,19 @@ namespace StoreManagement.Controllers
                 productViewModel.SearchText = searchText;
                 ProductList = ProductList.FindAll(p => Utils.StringLike(p.Id, searchText) || Utils.StringLike(p.Name, searchText));
             }
+
+            int currentPage = page ?? 1;
+            int totalRows = ProductList.Count;
+
+            ProductList = ProductList.Skip((currentPage - 1) * PAGE_SIZE)
+            .Take(PAGE_SIZE).ToList();
+
+            ViewBag.totalPage = IOFile.Utils.CalculateNumberOfPage(totalRows, PAGE_SIZE); ;
+            ViewBag.currentPage = currentPage;
+            ViewBag.totalRow = totalRows;
+
             productViewModel.ProductList = ProductList;
+            productViewModel.TotalRows = totalRows;
 
             return View("Index", productViewModel);
         }

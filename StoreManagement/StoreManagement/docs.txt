@@ -1,2 +1,6 @@
-// https://xuanthulab.net/asp-net-core-mvc-chi-tiet-ve-route-trong-asp-net-mvc.html
+﻿// https://xuanthulab.net/asp-net-core-mvc-chi-tiet-ve-route-trong-asp-net-mvc.html
 https://getbootstrap.com/docs/5.3/utilities/flex/
+
+Phân trang: https://viblo.asia/p/mvc-paging-roavrwLRGRM
+thêm/sữa query string
+https://trackjs.com/blog/query-string-parsing/

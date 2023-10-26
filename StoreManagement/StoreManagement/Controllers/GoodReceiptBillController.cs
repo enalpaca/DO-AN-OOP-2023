@@ -1,23 +1,35 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using StoreManagement.IOFile;
 using StoreManagement.Models;
 
 namespace StoreManagement.Controllers
 {
-    public class GoodReceiptBillController : Controller
+    public class GoodReceiptBillController : BaseController
     {
         // GET: GoodReceiptBillController
-        public ActionResult Index(string searchText)
+        public ActionResult Index(string searchText, int? page)
         {
             List<GoodsReceiptBill> goodsReceiptBills = IOFile.IOFile.ReadGoodsReceiptBill();
             GoodsReceiptBillViewModel goodsReceiptBillViewModel = new GoodsReceiptBillViewModel();
             if (searchText != null && searchText != "")
             {
                 goodsReceiptBillViewModel.SearchText = searchText;
-                goodsReceiptBills = goodsReceiptBills.FindAll(p => Utils.StringLike(p.Id, searchText) || Utils.StringLike(p.ProductItem.Name, searchText) || Utils.StringLike(p.ProductItem.Company, searchText));
+                goodsReceiptBills = goodsReceiptBills.FindAll(p => Utils.StringLike(p.Id, searchText) || Utils.StringLike(p.ProductItem.Name, searchText) || Utils.StringLike(p.ProductItem.Provider, searchText));
             }
+
+            int currentPage = page ?? 1;
+            int totalRows = goodsReceiptBills.Count;
+
+            goodsReceiptBills = goodsReceiptBills.Skip((currentPage - 1) * PAGE_SIZE)
+            .Take(PAGE_SIZE).ToList();
+
+            ViewBag.totalPage = IOFile.Utils.CalculateNumberOfPage(totalRows, PAGE_SIZE); ;
+            ViewBag.currentPage = currentPage;
+            ViewBag.totalRow = totalRows;
+
+            goodsReceiptBillViewModel.TotalRows = totalRows;
             goodsReceiptBillViewModel.GoodsReceiptBillList = goodsReceiptBills;
+
             return View("Index", goodsReceiptBillViewModel);
         }
 
@@ -93,9 +105,8 @@ namespace StoreManagement.Controllers
                         item.ProductItem.Name = goodsReceiptBillUpdated.ProductItem.Name;
                         item.ProductItem.Price = goodsReceiptBillUpdated.ProductItem.Price;
                         item.Deliver = goodsReceiptBillUpdated.Deliver;
-                        item.ProductItem.Unit = goodsReceiptBillUpdated.ProductItem.Unit;
                         item.ProductItem.Quantity = goodsReceiptBillUpdated.ProductItem.Quantity;
-                        item.ProductItem.Company = goodsReceiptBillUpdated.ProductItem.Company;
+                        item.ProductItem.Provider = goodsReceiptBillUpdated.ProductItem.Provider;
                     }
                 }
                 IOFile.IOFile.SaveGoodsReceiptBills(ReadListGoodsReceiptBill);

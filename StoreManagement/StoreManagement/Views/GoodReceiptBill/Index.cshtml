@@ -12,7 +12,7 @@
     </div>
 </form>
 
-<h2>Tổng cộng: @Model.GoodsReceiptBillList.Count</h2>
+<h2>Tổng cộng: @Model.TotalRows</h2>
 
 <div class="mb-3">
     <a asp-action="Create" class="btn btn-primary"> Tạo hóa đơn mới</a>
@@ -24,9 +24,8 @@
             <th>Mã</th>
             <th>Tên hàng</th>
             <th>Số lượng</th>
-            <th>Đơn vị tính</th>
             <th>Giá</th>
-            <th>Công ty</th>
+            <th>Nhà cung cấp</th>
             <th>Người giao hàng</th>
             <th>Ngày tạo hóa đơn</th>
             <th>Hành động</th>
@@ -37,9 +36,8 @@
                 <th>@item.Id</th>
                 <td>@item.ProductItem.Name</td>
                 <td class="text-center">@item.ProductItem.Quantity</td>
-                <td class="text-center">@item.ProductItem.Unit</td>
                 <td class="text-end">@item.ProductItem.Price.ToString("#,##0")</td>
-                <td>@item.ProductItem.Company</td>
+                <td>@item.ProductItem.Provider</td>
                 <td>@item.Deliver</td>
                 <td>@item.CreateAt</td>
                 <td>
@@ -55,4 +53,5 @@
             </tr>
         }
     </table>
+    <partial name="../Shared/Panigation.cshtml" />
 </div>
