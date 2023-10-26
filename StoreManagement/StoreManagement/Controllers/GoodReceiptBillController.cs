@@ -53,30 +53,25 @@ namespace StoreManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(GoodsReceiptBill newGoodsReceiptBill)
         {
-            try
+
+            List<GoodsReceiptBill> ReadListGoodsReceiptBill = IOFile.IOFile.ReadGoodsReceiptBill();
+            List<Product> ReadListProduct = IOFile.IOFile.ReadProduct();
+
+            int selectedProductIndex = ReadListProduct.FindIndex(p => p.Id == newGoodsReceiptBill.ProductItem.Id);
+
+            if (selectedProductIndex >= 0)
             {
-                List<GoodsReceiptBill> ReadListGoodsReceiptBill = IOFile.IOFile.ReadGoodsReceiptBill();
-                List<Product> ReadListProduct = IOFile.IOFile.ReadProduct();
-
-                foreach (Product productItem in ReadListProduct)
-                {
-                    if (productItem.Id == newGoodsReceiptBill.ProductItem.Id)
-                    {
-                        productItem.Quantity += newGoodsReceiptBill.ProductItem.Quantity;
-                    }
-                }
-
-                ReadListGoodsReceiptBill.Add(newGoodsReceiptBill);
-
-                IOFile.IOFile.SaveGoodsReceiptBills(ReadListGoodsReceiptBill);
-                IOFile.IOFile.SaveProducts(ReadListProduct);
-
-                return Redirect("Index");
+                ReadListProduct[selectedProductIndex].Quantity += newGoodsReceiptBill.ProductItem.Quantity;
             }
-            catch
-            {
-                return View();
-            }
+
+            ReadListGoodsReceiptBill.Add(newGoodsReceiptBill);
+
+            IOFile.IOFile.SaveGoodsReceiptBills(ReadListGoodsReceiptBill);
+            IOFile.IOFile.SaveProducts(ReadListProduct);
+
+            SetAlert(ErrorMessage.CREATED_SUCCESS, 1);
+            return Redirect("Index");
+
         }
 
         // GET: GoodReceiptBillController/Edit/5
@@ -102,14 +97,16 @@ namespace StoreManagement.Controllers
                 {
                     if (item.Id == goodsReceiptBillUpdated.Id)
                     {
-                        item.ProductItem.Name = goodsReceiptBillUpdated.ProductItem.Name;
+                        // item.ProductItem.Name = goodsReceiptBillUpdated.ProductItem.Name;
                         item.ProductItem.Price = goodsReceiptBillUpdated.ProductItem.Price;
                         item.Deliver = goodsReceiptBillUpdated.Deliver;
-                        item.ProductItem.Quantity = goodsReceiptBillUpdated.ProductItem.Quantity;
+                        // item.ProductItem.Quantity = goodsReceiptBillUpdated.ProductItem.Quantity;
                         item.ProductItem.Provider = goodsReceiptBillUpdated.ProductItem.Provider;
                     }
                 }
                 IOFile.IOFile.SaveGoodsReceiptBills(ReadListGoodsReceiptBill);
+
+                SetAlert(ErrorMessage.UPDATED_SUCCESS, 1);
                 return Redirect(id);
             }
             catch
@@ -119,7 +116,8 @@ namespace StoreManagement.Controllers
         }
 
         // POST: GoodReceiptBillController/Delete/5
-        [HttpPost("GoodReceiptBill/Delete/{id}")]
+        // chưa hỗ trợ vì xóa cần phải trừ đi sp tồn kho
+        /*[HttpPost("GoodReceiptBill/Delete/{id}")]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(string id)
         {
@@ -139,6 +137,6 @@ namespace StoreManagement.Controllers
             {
                 return View();
             }
-        }
+        }*/
     }
 }

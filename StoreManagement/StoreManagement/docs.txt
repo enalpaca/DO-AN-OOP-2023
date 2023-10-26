@@ -4,3 +4,5 @@ https://getbootstrap.com/docs/5.3/utilities/flex/
 Phân trang: https://viblo.asia/p/mvc-paging-roavrwLRGRM
 thêm/sữa query string
 https://trackjs.com/blog/query-string-parsing/
+
+https://www.telerik.com/blogs/how-to-pass-multiple-parameters-get-method-aspnet-core-mvc

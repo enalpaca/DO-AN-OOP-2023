@@ -15,7 +15,7 @@ namespace StoreManagement.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return Redirect("/Product/Statistics?Statisticstype=inventory");
         }
 
         public IActionResult Privacy()

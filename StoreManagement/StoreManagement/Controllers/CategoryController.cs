@@ -23,7 +23,7 @@ namespace StoreManagement.Controllers
 
             if (confirmOnDelete == "true")
             {
-                ViewBag.ProductListOnDeletedCategory = ReadListProduct.FindAll(p => p.CategoryId == deletedCategoryCode).ToArray();
+                catViewModel.ProductListOnDeletedCategory = ReadListProduct.FindAll(p => p.CategoryId == deletedCategoryCode).ToArray();
             }
 
             int currentPage = page ?? 1;
@@ -65,6 +65,8 @@ namespace StoreManagement.Controllers
 
                 ReadListCat.Add(newCat);
                 IOFile.IOFile.SaveCategories(ReadListCat);
+
+                SetAlert(ErrorMessage.CREATED_SUCCESS, 1);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -101,6 +103,8 @@ namespace StoreManagement.Controllers
                     IOFile.IOFile.SaveCategories(ReadListCategory);
                 }
 
+                SetAlert(ErrorMessage.UPDATED_SUCCESS, 1);
+
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -118,9 +122,9 @@ namespace StoreManagement.Controllers
         // POST: CategoryController/Delete/5
         [HttpPost("Category/Delete/{id}")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(string id)
+        public ActionResult Delete(string id, string comfirmed)
         {
-            try
+            if (comfirmed == "true")
             {
                 List<Category> ReadListCategory = IOFile.IOFile.ReadCategory();
                 int categoryIndex = ReadListCategory.FindIndex(x => x.Id == id);
@@ -131,12 +135,11 @@ namespace StoreManagement.Controllers
                     IOFile.IOFile.SaveCategories(ReadListCategory);
                 }
 
+                SetAlert(ErrorMessage.DELETED_SUCCESS, 1);
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+
+            return Redirect("/Category?confirmOnDelete=true&deletedCategoryCode=" + id);
         }
     }
 }

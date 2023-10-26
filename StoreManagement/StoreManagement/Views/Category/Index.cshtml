@@ -1,9 +1,65 @@
 ﻿@model StoreManagement.Models.CategoryViewModel
 @{
     ViewData["Title"] = "Danh sách loại hàng";
+    string? showConfirmOnDelete = this.Context.Request.Query["confirmOnDelete"];
+    string? deletedCategoryCode = this.Context.Request.Query["deletedCategoryCode"];
 }
 
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            const params = new URLSearchParams(window.location.search);
+
+            if (params.get("confirmOnDelete") == "true") {
+                $("#myConfirmationModal").modal('show');
+            }
+        });
+    </script>
+    }
+
 <h1>@ViewData["Title"]</h1>
+
+@if (showConfirmOnDelete == "true")
+{
+    <div class="mb-3 col-md-12">
+        <!-- Modal -->
+        <div class="modal fade" id="myConfirmationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Chú ý!!!</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        Loại hàng đang được sử dụng cho các sản phẩm bên dưới...
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered">
+                                <tr>
+                                    <th>Mã</th>
+                                    <th>Tên hàng</th>
+
+                                </tr>
+                                @foreach (Product item in @Model.ProductListOnDeletedCategory)
+                                {
+                                    <tr>
+                                        <td>@item.Id</td>
+                                        <td>@item.Name</td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <form asp-action="Delete" asp-route-comfirmed="true" asp-route-id="@deletedCategoryCode">
+                            <input type="submit" value="Xác nhận xóa" class="btn btn-danger">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 <form method="get" action="Category">
     <div class="input-group mb-3">

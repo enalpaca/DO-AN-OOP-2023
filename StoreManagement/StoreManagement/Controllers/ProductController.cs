@@ -150,22 +150,44 @@ namespace StoreManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(string id, IFormCollection collection)
         {
-            try
-            {
-                List<Product> ReadListProduct = IOFile.IOFile.ReadProduct();
-                int productIndex = ReadListProduct.FindIndex(x => x.Id == id);
+            List<Product> ReadListProduct = IOFile.IOFile.ReadProduct();
+            List<Invoice> ReadInvoice = IOFile.IOFile.ReadInvoice();
 
-                if (productIndex >= 0)
-                {
-                    ReadListProduct.RemoveAt(productIndex);
-                    IOFile.IOFile.SaveProducts(ReadListProduct);
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            catch
+            int productIndex = ReadListProduct.FindIndex(x => x.Id == id);
+
+            if (productIndex < 0)
             {
-                return View();
+                SetAlert(ErrorMessage.PRODUCT_NOT_FOUND, 3);
+                return Redirect("/Product");
             }
+
+            bool flag = false;
+
+            foreach (Invoice invoice in ReadInvoice)
+            {
+                foreach (InvoiceProduct invoiceProduct in invoice.ProductItems)
+                {
+                    if (invoiceProduct.Id == ReadListProduct[productIndex].Id)
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+            }
+
+            if (flag == true)
+            {
+                SetAlert(ErrorMessage.PRODUCT_EXISTING_IN_INVOICE, 3);
+            }
+            else
+            {
+                ReadListProduct.RemoveAt(productIndex);
+                IOFile.IOFile.SaveProducts(ReadListProduct);
+
+                SetAlert(ErrorMessage.DELETED_SUCCESS, 3);
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
